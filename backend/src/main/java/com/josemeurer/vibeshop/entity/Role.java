@@ -1,4 +1,4 @@
-package com.josemeurer.vibeshop.entities;
+package com.josemeurer.vibeshop.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
