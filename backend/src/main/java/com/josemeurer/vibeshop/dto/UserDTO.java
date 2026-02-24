@@ -1,13 +1,11 @@
 package com.josemeurer.vibeshop.dto;
 
 import java.util.Set;
-import java.util.UUID;
 
-public record CreateUserDTO(
+public record UserDTO(
         String name,
         String surname,
         String email,
-        String password,
-        Set<UUID> roles
+        Set<String> roles
 ) {
 }
