@@ -26,20 +26,24 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
-    @Async
     @Override
-    public CompletableFuture<UserDTO> createUser(CreateUserDTO dto) {
+    @Transactional
+    public UserDTO createUser(CreateUserDTO dto) {
         if(userRepository.existsByEmail(dto.email()))
             throw new IllegalArgumentException("E-mail já está em uso.");
 
-        var encryptedPassword = passwordEncoder.encode(dto.password());
         var user = userMapper.toEntity(dto);
-        user.setPassword(encryptedPassword);
+        user.setPassword(passwordEncoder.encode(dto.password()));
 
-        var roles = roleRepository.findAllById(dto.roles());
-        user.setRoles(new HashSet<>(roles));
+        if (dto.roles() != null && !dto.roles().isEmpty()) {
+            var roles = roleRepository.findAllById(dto.roles());
+            if (roles.size() != dto.roles().size()) {
+                throw new IllegalArgumentException("Uma ou mais roles informadas não existem.");
+            }
+            user.setRoles(new HashSet<>(roles));
+        }
 
         var result = userRepository.save(user);
-        return CompletableFuture.completedFuture(userMapper.toDTO(result));
+        return userMapper.toDTO(result);
     }
 }
