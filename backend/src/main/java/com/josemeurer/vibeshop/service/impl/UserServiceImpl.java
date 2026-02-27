@@ -35,13 +35,10 @@ public class UserServiceImpl implements UserService {
         var user = userMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(dto.password()));
 
-        if (dto.roles() != null && !dto.roles().isEmpty()) {
-            var roles = roleRepository.findAllById(dto.roles());
-            if (roles.size() != dto.roles().size()) {
-                throw new IllegalArgumentException("Uma ou mais roles informadas não existem.");
-            }
-            user.setRoles(new HashSet<>(roles));
-        }
+        var defaultRole = roleRepository.findByName("USER")
+                .orElseThrow(() -> new IllegalStateException("Role padrão 'USER' não encontrada no sistema."));
+                
+        user.setRoles(new HashSet<>(java.util.Collections.singletonList(defaultRole)));
 
         var result = userRepository.save(user);
         return userMapper.toDTO(result);

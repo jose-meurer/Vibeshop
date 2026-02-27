@@ -13,8 +13,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    @Mapping(target = "roles", ignore = true)
-    User toEntity(CreateUserDTO dto);
+    User toEntity(CreateUserDTO entity);
 
     @Mapping(target = "roles", expression = "java(mapRoles(entity.getRoles()))")
     UserDTO toDTO(User entity);

@@ -9,7 +9,7 @@ import java.util.UUID;
 @Table(name = "roles")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Role {
 
